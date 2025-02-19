@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'token', // یا 'sanctum' بسته به استفاده شما
+            'provider' => 'users',
+        ],
     ],
 
     /*

@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
     
          Order::factory(20)->create();
         // ایجاد نقش‌ها برای گارد api
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
-        $userRole = Role::create(['name' => 'user', 'guard_name' => 'api']);
+        $adminRole = Role::create(['name' => 'Admin', 'guard_name' => 'api']);
+        $adminRole = Role::create(['name' => 'superAdmin', 'guard_name' => 'api']);
+        $userRole = Role::create(['name' => 'User', 'guard_name' => 'api']);
 
         // تعریف پرمیژن‌ها
         $manageUsers = Permission::create(['name' => 'manage_users', 'guard_name' => 'api']);

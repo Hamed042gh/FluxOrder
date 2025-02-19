@@ -76,9 +76,6 @@ class AuthController extends Controller
 
             //role
             $user->assignRole('user');
-            //permissions
-            $user->givePermissionTo('view_orders');
-
 
             // Return Json Response with success message and token in header
             return response()->json([

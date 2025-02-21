@@ -74,9 +74,6 @@ class AuthController extends Controller
             // Generate Token
             $token = $user->createToken('RegisterToken')->plainTextToken;
 
-            //role
-            $user->assignRole('user');
-
             // Return Json Response with success message and token in header
             return response()->json([
                 'message' => 'User created successfully',

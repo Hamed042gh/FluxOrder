@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -16,21 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         User::factory(10)->create();
-    
-         Order::factory(20)->create();
-        // ایجاد نقش‌ها برای گارد api
+     
+        User::factory(10)->create();
+
+         $user1 = User::factory()->create([
+             'name' => 'Admin',
+             'email' => 'admin@example.com',
+             'password' => Hash::make('aaaaaaaa'),
+         ]);
+        
+        // Create roles 
         $adminRole = Role::create(['name' => 'Admin', 'guard_name' => 'api']);
-        $adminRole = Role::create(['name' => 'superAdmin', 'guard_name' => 'api']);
-        $userRole = Role::create(['name' => 'User', 'guard_name' => 'api']);
-
-        // تعریف پرمیژن‌ها
-        $manageUsers = Permission::create(['name' => 'manage_users', 'guard_name' => 'api']);
-        $viewOrders = Permission::create(['name' => 'view_orders', 'guard_name' => 'api']);
-        $editOrders = Permission::create(['name' => 'edit_orders', 'guard_name' => 'api']);
-
-        // اختصاص پرمیژن‌ها به رول‌ها
-        $adminRole->givePermissionTo([$manageUsers, $viewOrders, $editOrders]); // پرمیژن‌های مربوط به admin
-        $userRole->givePermissionTo([$viewOrders]); // فقط view_orders به user داده میشه
-        }
+        //Assign roles to the users
+        $user1->assignRole($adminRole);
+      
+}
 }

@@ -20,3 +20,4 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::put('/order/{id}',[OrderController::class, 'updateOrder']);
     Route::delete('/order/{id}',[OrderController::class,'destroyOrder']);
 });
+

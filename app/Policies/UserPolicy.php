@@ -12,7 +12,10 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['Admin','SuperAdmin']);
+        if ($user->hasPermissionTo('ViewUsers')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -20,6 +23,9 @@ class UserPolicy
      */
     public function view(User $user): bool
     {
+        if ($user->hasPermissionTo('ViewUsers')) {
+            return true;
+        }
         return false;
     }
 
@@ -28,7 +34,10 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['Admin', 'SuperAdmin']);
+        if ($user->hasPermissionTo('CreateUsers')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -36,7 +45,10 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->hasRole(['Admin', 'SuperAdmin']);
+        if ($user->hasPermissionTo('UpdateUsers')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -44,7 +56,10 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->hasRole('SuperAdmin');
+        if ($user->hasPermissionTo('DeleteUsers')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -52,7 +67,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('SuperAdmin');
     }
 
     /**
@@ -60,6 +75,23 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('SuperAdmin');
     }
+
+    public function deleteAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
+    }
+
+    public function forceDeleteAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
+    }
+    public function restoreAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
+    }
+
+
+
 }

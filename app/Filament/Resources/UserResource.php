@@ -4,20 +4,17 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\Pages\CreateUser;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -27,6 +24,7 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationGroup = 'User Setting';
     protected static ?int $navigationSort = 1;
+    
 
     public static function form(Form $form): Form
     {
@@ -34,6 +32,8 @@ class UserResource extends Resource
             ->schema([
             Fieldset::make()->schema([
                 Forms\Components\TextInput::make('name')
+                ->autofocus()
+                ->placeholder('Your name ...')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
@@ -47,16 +47,14 @@ class UserResource extends Resource
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(Page $livewire) => ($livewire instanceof CreateUser))
                     ->revealable()
-                    ->maxLength(255),
-Select::make('roles')
-                ->relationship('roles','name')
-                ->preload()
-                ,
-                Select::make('permissions')
-                ->relationship('permissions','name')
-                ->preload()
+                    ->maxLength(255)
+                    ->default(''),
 
-                ])->columns(2)
+                Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->visible(fn() => Auth::user()->hasRole('SuperAdmin')),
+            ])->columns(4)
               
             ]);
     }
@@ -65,8 +63,7 @@ Select::make('roles')
     {
         return $table
             ->columns([
-                ImageColumn::make('avatar')
-                ->circular(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -88,7 +85,8 @@ Select::make('roles')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -112,4 +110,13 @@ Select::make('roles')
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+
+    {
+        $user = Auth::user();
+
+        return parent::getEloquentQuery()->where('name', '!=', 'SuperAdmin');
+
+}
 }

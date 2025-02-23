@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Role;
 use App\Models\User;
+use App\Notifications\NewUserRegistered;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 
@@ -151,4 +153,6 @@ class AuthController extends Controller
             'Authorization' => 'Bearer ' . $token,
         ]);
     }
+
+
 }

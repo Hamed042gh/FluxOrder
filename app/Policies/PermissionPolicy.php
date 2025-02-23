@@ -13,7 +13,7 @@ class PermissionPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['Admin', 'SuperAdmin']);
+        return $user->hasRole('SuperAdmin');
     }
 
     /**
@@ -21,7 +21,7 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission): bool
     {
-        return false;
+        return $user->hasRole('SuperAdmin');
     }
 
     /**
@@ -53,7 +53,7 @@ class PermissionPolicy
      */
     public function restore(User $user, Permission $permission): bool
     {
-        return false;
+        return $user->hasRole('SuperAdmin');
     }
 
     /**
@@ -61,6 +61,23 @@ class PermissionPolicy
      */
     public function forceDelete(User $user, Permission $permission): bool
     {
-        return false;
+        return $user->hasRole('SuperAdmin');
+ 
+    }
+
+
+    public function deleteAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
+    }
+
+    public function forceDeleteAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
+    }
+    
+    public function restoreAny(User $user)
+    {
+        return $user->hasRole('SuperAdmin');
     }
 }

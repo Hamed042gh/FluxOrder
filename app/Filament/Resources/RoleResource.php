@@ -14,7 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Illuminate\Support\Facades\Auth;
 
 class RoleResource extends Resource
 {
@@ -84,8 +84,17 @@ class RoleResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->where('name','!=',['Admin','User new']);
-    }
+    // public static function getEloquentQuery(): Builder
+    // {
+    //   $user = Auth::user();
+    //     if
+    //     ($user->hasRole('SuperAdmin') ) {
+    //         // اگر کاربر ادمین است، همه رکوردها نمایش داده می‌شود
+    //         return parent::getEloquentQuery();
+    //     } else {
+    //         // اگر کاربر ادمین نیست، رکوردهایی که نامشان با 'Admin' یا 'User new' است فیلتر می‌شود
+    //         return parent::getEloquentQuery()->whereNotIn('name', ['Admin', 'User new']);
+    //     }
+    // }
+
 }

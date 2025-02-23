@@ -19,17 +19,23 @@ class DatabaseSeeder extends Seeder
     {
      
         User::factory(10)->create();
+     
+     
+        Permission::create(['name' => 'create-orders']);
+        Permission::create(['name' => 'read-orders']);
+        Permission::create(['name' => 'update-orders']);
+        Permission::create(['name' => 'delete-orders']);
 
-         $user1 = User::factory()->create([
-             'name' => 'Admin',
-             'email' => 'admin@example.com',
-             'password' => Hash::make('aaaaaaaa'),
-         ]);
-        
-        // Create roles 
-        $adminRole = Role::create(['name' => 'Admin', 'guard_name' => 'api']);
-        //Assign roles to the users
-        $user1->assignRole($adminRole);
-      
+        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole->givePermissionTo(Permission::all());
+
+        $user = User::factory()->create([
+            'password' => Hash::make('password123'),
+        ]);
+
+        $user->assignRole($adminRole);
+
+        Order::factory(10)->create();
+    
 }
 }
